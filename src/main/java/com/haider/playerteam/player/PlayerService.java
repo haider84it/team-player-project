@@ -17,7 +17,7 @@ public class PlayerService {
         this.playerMapper = playerMapper;
     }
 
-    public PlayerResponseDto saveStudent(
+    public PlayerResponseDto savePlayer(
             PlayerDto dto
     ) {
         var player = playerMapper.toPlayer(dto);

@@ -25,7 +25,7 @@ public class PlayerController {
     public PlayerResponseDto savePlayer(
            @Valid @RequestBody PlayerDto dto
     ) {
-     return this.playerService.saveStudent(dto);
+     return this.playerService.savePlayer(dto);
     }
 
 
