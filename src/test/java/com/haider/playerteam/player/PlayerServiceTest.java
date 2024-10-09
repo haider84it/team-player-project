@@ -7,7 +7,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 class PlayerServiceTest {
 
@@ -71,7 +77,46 @@ class PlayerServiceTest {
         assertEquals(dto.lastname(), playerResponseDto.lastname());
         assertEquals(dto.email(), playerResponseDto.email());
 
+        verify(playerMapper, times(1))
+                .toPlayer(dto);
+        verify(repository, times(1))
+                .save(player);
+        verify(playerMapper, times(1))
+                .toPlayerResponseDto(savedPlayer);
+
     }
 
+
+    @Test
+    public void shouldFindAllPlayer() {
+        //Given
+        List<Player> players = new ArrayList<>();
+        players.add(new Player(
+                "Leo",
+                "Laith",
+                "leolaith@gmail.com",
+                23
+        ));
+
+
+        //Mock the calls
+       Mockito.when(repository.findAll()).thenReturn(players);
+       Mockito.when(playerMapper.toPlayerResponseDto(any(Player.class)))
+               .thenReturn(new PlayerResponseDto(
+                       "Leo",
+                       "Laith",
+                       "leolaith@gmail.com")
+                       );
+
+       //when
+        List<PlayerResponseDto> responseDtos = playerService.findAllPlayer();
+
+       //then
+        assertEquals(players.size(), responseDtos.size());
+
+        verify(repository, times(1)).findAll();
+
+
+    }
 
 }
