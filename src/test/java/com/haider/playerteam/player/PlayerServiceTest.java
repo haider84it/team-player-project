@@ -9,6 +9,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -118,5 +119,43 @@ class PlayerServiceTest {
 
 
     }
+
+    @Test
+    public void shouldReturnPlayerById() {
+        //Given
+        int studentId = 1;
+        Player savedPlayer = new Player(
+                "Leo",
+                "Laith",
+                "leolaith@gmail.com",
+                23);
+
+        PlayerResponseDto playerResponseDto = new PlayerResponseDto(
+                "Leo",
+                "Laith",
+                  "leolaith@gmail.com");
+
+
+
+        //Mock the calls
+        Mockito.when(repository.findById(studentId))
+                .thenReturn(Optional.of(savedPlayer));
+        Mockito.when(playerMapper.toPlayerResponseDto(any(Player.class)))
+                .thenReturn(playerResponseDto);
+        //when
+        PlayerResponseDto responseDto = playerService.findPlayerById(studentId);
+
+
+        //then
+        assertEquals(responseDto.firstname(), savedPlayer.getFirstname());
+        assertEquals(responseDto.lastname(), savedPlayer.getLastname());
+        assertEquals(responseDto.email(), savedPlayer.getEmail());
+
+        verify(repository, times(1)).findById(studentId);
+        verify(playerMapper, times(1)).toPlayerResponseDto(savedPlayer);
+
+    }
+
+
 
 }
