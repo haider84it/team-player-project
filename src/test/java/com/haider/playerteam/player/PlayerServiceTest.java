@@ -156,6 +156,37 @@ class PlayerServiceTest {
 
     }
 
+    @Test
+    public void shouldFindPlayerByName() {
+        //Given
+        String firstname = "Leo";
+        List<Player> players = new ArrayList<>();
+        players.add(new Player(
+                "Leo",
+                "Laith",
+                "leolaith@gmail.com",
+                23
+        ));
+
+        //Mock the calls
+        Mockito.when(repository.findAllByFirstnameContaining(firstname))
+            .thenReturn(players);
+        Mockito.when(playerMapper.toPlayerResponseDto(any(Player.class)))
+                .thenReturn(new PlayerResponseDto(
+                        "Leo",
+                        "Laith",
+                        "leolaith@gmail.com")
+                );
+
+        //when
+     List<PlayerResponseDto> playerResponseDtos = playerService.findPlayerByName(firstname);
+
+     //then
+     assertEquals(players.size(), playerResponseDtos.size());
+
+     verify(repository, times(1))
+        .findAllByFirstnameContaining(firstname);
+    }
 
 
 }
